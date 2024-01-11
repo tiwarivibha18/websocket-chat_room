@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title style="align-items:center;">websocket </title>
+    </head>
+    <body style="background-color:#A3E4D7; text-align: center; padding-top: 20rem;">
+        <h1>websocket chat Room</h1>
+        <div>
+            <input type="text" id="messageInput" placeholder="Type a message">
+            <button onclick="sendMessage()" style="background-color: rgb(12, 187, 12);">Send</button>
+        </div>
+        <div id="output"></div>
+        <script>
+            const userId=prompt("Enter your user ID :");
+            const ws = new WebSocket(`ws://localhost:8000/ws/${userId}`);
+            ws.onmessage=function(event)
+            {
+                const outputDiv=document.getElementById("output");
+                const message_data=JSON.parse(event.data);
+                outputDiv.innerHTML +=`<p>Received from ${message_data.user_id}: ${message_data.message}</p>`;
+            };
+            function sendMessage()
+            {
+                const outputDiv=document.getElementById("output");
+                const messageInput = document.getElementById("messageInput");
+                const message=messageInput.value;
+                outputDiv.innerHTML +=`<p>Sent: ${message}</p>`;
+                ws.send(message);
+                messageInput.value="";
+            }
+        </script>
+    </body>
+</html>
